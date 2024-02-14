@@ -1,7 +1,7 @@
 package edu.uw.ischool.chym2002.quizdroid
 
 import org.junit.Test
-
+import org.junit.Before
 import org.junit.Assert.*
 
 /**
@@ -10,8 +10,21 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+    private lateinit var repo: InMemoryTopicRepository
+
+    @Before
+    fun setUp() {
+        repo = InMemoryTopicRepository()
+    }
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun getTopicsTest() {
+        val topics = repo.getTopics()
+        assertEquals(4, topics.size)
+    }
+
+    @Test
+    fun getTopicByNameTest() {
+        val topic = repo.getTopicByName("Music")
+        assertEquals("Music", topic.name)
     }
 }
