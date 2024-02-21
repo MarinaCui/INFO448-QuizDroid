@@ -9,7 +9,7 @@ class InMemoryTopicRepository : TopicRepository {
 
     private fun initTopics(): List<Topic> {
         // read from assets/data/questions.json
-        val jsonString = QuizApp.instance.assets.open("data/myQuestions.json").bufferedReader().use { it.readText() }
+        val jsonString = QuizApp.instance.assets.open("data/questions.json").bufferedReader().use { it.readText() }
         return parseQuizTopics(jsonString)
     }
 
