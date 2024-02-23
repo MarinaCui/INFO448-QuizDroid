@@ -1,16 +1,39 @@
 package edu.uw.ischool.chym2002.quizdroid
 
+import android.content.Context
 import android.util.Log
 import org.json.JSONArray
+import java.io.File
+import java.io.IOException
 
-class InMemoryTopicRepository : TopicRepository {
+class InMemoryTopicRepository(context: Context) : TopicRepository {
     private val TAG = "InMemoryTopicRepository"
-    private val topics: List<Topic> = initTopics()
+    private val topics: List<Topic> = initTopics(context)
 
-    private fun initTopics(): List<Topic> {
-        // read from assets/data/questions.json
-        val jsonString = QuizApp.instance.assets.open("data/questions.json").bufferedReader().use { it.readText() }
+    private fun initTopics(context: Context): List<Topic> {
+        // read from internal storage
+        val jsonString = readSavedData(context)
+
         return parseQuizTopics(jsonString)
+    }
+
+    private fun readSavedData(context: Context):String {
+        val filename = "questions.json"
+        val jsonString = context.assets.open("data/questions.json").bufferedReader().use { it.readText() }
+        val file = File(context.getFilesDir(), filename)
+        if (!file.exists()) {
+            file.createNewFile()
+            file.writeText(jsonString)
+        }
+
+        return try {
+            context.openFileInput(filename).use { inputStream ->
+                inputStream.bufferedReader().use { it.readText() }
+            }
+        } catch (e: IOException) {
+            Log.e(TAG, "Error reading from file", e)
+            ""
+        }
     }
 
     private fun parseQuizTopics(jsonString: String): List<Topic> {

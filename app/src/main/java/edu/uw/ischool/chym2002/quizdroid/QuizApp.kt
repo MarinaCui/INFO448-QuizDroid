@@ -9,7 +9,7 @@ class QuizApp : Application() {
         private set
     override fun onCreate() {
         super.onCreate()
-        topicRepository = InMemoryTopicRepository()
+        topicRepository = InMemoryTopicRepository(this)
     }
 
     companion object {
